@@ -15,7 +15,31 @@ Erstelle eine Prozedur, die das anlegen von Benutzern durch übergabe von Parame
 
 #### Lösung
 ```sql
-Deine Lösung
+
+set serveroutput on;
+
+create or replace procedure insertAccount (p_surname in varchar2, p_forename in varchar2, p_email in varchar2, p_cdate in date, p_udate in date)
+as
+
+v_accountID account.account_id%TYPE;
+
+begin
+	select max(account_id)+1 into v_accountID
+	from account;
+	
+	insert into account (account_id, surname, forename, email, c_date, u_date)
+	values (v_accountID, p_surname, p_forename, p_email, p_cdate, p_udate);
+
+exception
+	when others then 
+	raise_application_error(-20020, 'Error: ' || substr(1, 80, sqlerrm));
+end;
+/
+
+
+exec insertAccount ('Klasen', 'Matthias', 'klasenma@hochschule-trier.de','09.11.1993','09.11.1993');
+
+
 ```
 
 ### Aufgabe 2
